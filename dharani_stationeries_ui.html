@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dharani Stationeries</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#FFFFFF;
+    --blue:#2455E6;
+    --blue-dark:#1B3FB8;
+    --navy:#0F1F3D;
+    --tint:#EFF4FF;
+    --hairline:#D7E3FB;
+    --green:#1FA463;
+    --muted:#6B7A99;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#DCE6FB;
+    font-family:'Inter',sans-serif;
+    color:var(--navy);
+    display:flex;
+    justify-content:center;
+    padding:24px 0;
+  }
+  .phone{
+    width:390px;
+    min-height:780px;
+    background:var(--white);
+    border-radius:36px;
+    box-shadow:0 30px 60px rgba(15,31,61,0.25);
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+  }
+  /* spiral notebook binding signature */
+  .binding{
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:14px;
+    background:var(--tint);
+    border-right:1px solid var(--hairline);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    gap:22px;
+    padding-top:70px;
+    z-index:5;
+  }
+  .binding .hole{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--white);
+    border:1.5px solid var(--hairline);
+  }
+  .screen{
+    margin-left:14px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    height:780px;
+  }
+  header.top{
+    background:var(--blue);
+    color:var(--white);
+    padding:22px 20px 18px;
+    border-radius:0 0 22px 0;
+  }
+  header.top .shop{
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:0.2px;
+  }
+  header.top .date{
+    margin-top:4px;
+    font-size:14px;
+    opacity:0.85;
+  }
+  header.top .total-today{
+    margin-top:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+  }
+  header.top .total-today .label{ font-size:13px; opacity:0.85;}
+  header.top .total-today .amt{ font-family:'Poppins',sans-serif; font-weight:700; font-size:26px;}
+
+  .content{
+    flex:1;
+    overflow-y:auto;
+    padding:18px 18px 100px;
+  }
+  .section-title{
+    font-family:'Poppins',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    color:var(--navy);
+    margin:6px 0 12px;
+  }
+  .bill-card{
+    background:var(--tint);
+    border:1px solid var(--hairline);
+    border-radius:16px;
+    padding:14px 16px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .bill-card .items{
+    font-size:14px;
+    color:var(--muted);
+    margin-top:3px;
+  }
+  .bill-card .time{
+    font-size:15px;
+    font-weight:600;
+  }
+  .bill-card .amt{
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    font-size:18px;
+    color:var(--blue-dark);
+  }
+  .empty-note{
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+    padding:30px 10px;
+  }
+  .fab{
+    position:absolute;
+    bottom:24px;
+    left:50%;
+    transform:translateX(calc(-50% + 7px));
+    background:var(--blue);
+    color:var(--white);
+    border:none;
+    border-radius:18px;
+    padding:16px 28px;
+    font-family:'Poppins',sans-serif;
+    font-weight:600;
+    font-size:16px;
+    box-shadow:0 10px 24px rgba(36,85,230,0.4);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    width:calc(100% - 76px);
+    justify-content:center;
+  }
+  .fab:active{ background:var(--blue-dark); }
+
+  /* New bill screen */
+  #newBillScreen{ display:none; }
+  .nb-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:18px 18px 12px;
+    border-bottom:1px solid var(--hairline);
+  }
+  .back-btn{
+    width:38px;height:38px;
+    border-radius:12px;
+    background:var(--tint);
+    border:1px solid var(--hairline);
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;color:var(--blue-dark);
+    cursor:pointer;
+  }
+  .nb-title{ font-family:'Poppins',sans-serif; font-weight:600; font-size:18px; }
+
+  .item-row{
+    background:var(--tint);
+    border:1px solid var(--hairline);
+    border-radius:16px;
+    padding:14px;
+    margin-bottom:12px;
+  }
+  .field-label{
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:6px;
+    display:block;
+  }
+  .name-input{
+    width:100%;
+    padding:13px 14px;
+    font-size:17px;
+    font-family:'Inter',sans-serif;
+    border:1.5px solid var(--hairline);
+    border-radius:12px;
+    background:var(--white);
+    color:var(--navy);
+    margin-bottom:10px;
+  }
+  .name-input:focus{ outline:none; border-color:var(--blue); }
+  .suggest-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .chip{
+    background:var(--white);
+    border:1.5px solid var(--blue);
+    color:var(--blue-dark);
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .chip:active{ background:var(--blue); color:var(--white); }
+  .chip.confirmed{
+    background:var(--white);
+    border:1.5px solid var(--hairline);
+    color:var(--navy);
+    cursor:default;
+  }
+  .price-qty-row{
+    display:flex;
+    gap:10px;
+  }
+  .price-qty-row .col{ flex:1; }
+  .price-input{
+    width:100%;
+    padding:13px 14px;
+    font-size:18px;
+    font-weight:600;
+    font-family:'Inter',sans-serif;
+    border:1.5px solid var(--hairline);
+    border-radius:12px;
+    background:var(--white);
+    color:var(--navy);
+  }
+  .price-input:focus{ outline:none; border-color:var(--blue); }
+  .subtotal-line{
+    text-align:right;
+    font-size:14px;
+    color:var(--muted);
+    margin-top:8px;
+  }
+  .subtotal-line b{ color:var(--navy); font-family:'Poppins',sans-serif;}
+
+  .add-item-btn{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:1.5px dashed var(--blue);
+    background:var(--white);
+    color:var(--blue-dark);
+    font-family:'Poppins',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    margin-bottom:16px;
+  }
+
+  .nb-footer{
+    border-top:1px solid var(--hairline);
+    padding:16px 18px 20px;
+    background:var(--white);
+  }
+  .grand-total{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:12px;
+  }
+  .grand-total .label{ font-size:15px; color:var(--muted); font-weight:500;}
+  .grand-total .amt{ font-family:'Poppins',sans-serif; font-weight:700; font-size:24px; color:var(--blue-dark);}
+  .save-btn{
+    width:100%;
+    padding:16px;
+    background:var(--blue);
+    color:var(--white);
+    border:none;
+    border-radius:14px;
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    font-size:17px;
+    cursor:pointer;
+  }
+  .save-btn:active{ background:var(--blue-dark); }
+
+  .toast{
+    position:absolute;
+    top:70px; left:50%;
+    transform:translateX(-50%) translateY(-20px);
+    background:var(--green);
+    color:var(--white);
+    padding:12px 22px;
+    border-radius:12px;
+    font-weight:600;
+    font-size:14px;
+    opacity:0;
+    transition:all 0.3s ease;
+    z-index:20;
+    box-shadow:0 8px 20px rgba(31,164,99,0.35);
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="binding">
+    <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+    <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+    <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  </div>
+
+  <div class="screen">
+    <!-- LANDING SCREEN -->
+    <div id="landingScreen" style="display:flex; flex-direction:column; height:100%;">
+      <header class="top">
+        <div class="shop">Dharani Stationeries</div>
+        <div class="date" id="todayDate">Friday, 03 July 2026</div>
+        <div class="total-today">
+          <div class="label">Today's sales</div>
+          <div class="amt">₹<span id="todayTotal">315</span></div>
+        </div>
+      </header>
+      <div class="content">
+        <div class="section-title">Today's bills</div>
+        <div id="billsList">
+          <div class="bill-card">
+            <div>
+              <div class="time">10:32 AM</div>
+              <div class="items">Pen, Notebook</div>
+            </div>
+            <div class="amt">₹120</div>
+          </div>
+          <div class="bill-card">
+            <div>
+              <div class="time">12:10 PM</div>
+              <div class="items">Xerox x3</div>
+            </div>
+            <div class="amt">₹15</div>
+          </div>
+          <div class="bill-card">
+            <div>
+              <div class="time">3:45 PM</div>
+              <div class="items">A4 Paper</div>
+            </div>
+            <div class="amt">₹180</div>
+          </div>
+        </div>
+      </div>
+      <button class="fab" onclick="showNewBill()">＋ &nbsp; New Bill</button>
+    </div>
+
+    <!-- NEW BILL SCREEN -->
+    <div id="newBillScreen">
+      <div class="nb-header">
+        <div class="back-btn" onclick="showLanding()">←</div>
+        <div class="nb-title">New Bill</div>
+      </div>
+      <div class="content" style="padding-bottom:20px;">
+        <div class="item-row">
+          <span class="field-label">Items purchased</span>
+          <input class="name-input" id="itemsInput" placeholder="Type items, comma separated: Pen, Notebook, Xerox" oninput="onItemsInput(this.value)" autocomplete="off" />
+          <div class="suggest-row" id="suggestBox"></div>
+          <div class="suggest-row" id="chipsBox" style="margin-top:2px;"></div>
+        </div>
+
+        <div class="item-row">
+          <span class="field-label">Total price (₹)</span>
+          <input type="number" class="price-input" id="totalPriceInput" placeholder="0" oninput="updateGrandTotalSimple()" />
+        </div>
+      </div>
+      <div class="nb-footer">
+        <div class="grand-total">
+          <div class="label">Total</div>
+          <div class="amt">₹<span id="grandTotal">0</span></div>
+        </div>
+        <button class="save-btn" onclick="saveBill()"> Save Bill</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Bill saved ✓</div>
+</div>
+
+<script>
+// mock "learned" product catalog — in the real app this comes from the database
+// and grows automatically every time a new item is typed & saved
+const catalog = [
+  {name:"Pen", price:10, category:"Pens"},
+  {name:"Pencil", price:5, category:"Pens"},
+  {name:"Xerox (per page)", price:2, category:"Xerox"},
+  {name:"A4 Paper (bundle)", price:180, category:"Paper"},
+  {name:"Notebook - 100pg", price:35, category:"Notebooks"},
+  {name:"Notebook - 200pg", price:60, category:"Notebooks"},
+  {name:"File Cover", price:15, category:"Files"},
+  {name:"Stapler Pin Box", price:20, category:"Office Supplies"},
+  {name:"Eraser", price:5, category:"Pens"},
+  {name:"Geometry Box", price:60, category:"Art Supplies"}
+];
+
+let confirmedItems = [];
+
+function showNewBill(){
+  document.getElementById('landingScreen').style.display='none';
+  document.getElementById('newBillScreen').style.display='block';
+  document.getElementById('itemsInput').value = '';
+  document.getElementById('suggestBox').innerHTML = '';
+  document.getElementById('chipsBox').innerHTML = '';
+  document.getElementById('totalPriceInput').value = '';
+  document.getElementById('grandTotal').textContent = '0';
+  confirmedItems = [];
+}
+function showLanding(){
+  document.getElementById('newBillScreen').style.display='none';
+  document.getElementById('landingScreen').style.display='flex';
+}
+
+// Splits whatever is typed by comma. Everything before the last comma is
+// treated as "confirmed" items (shown as tags). The text after the last
+// comma is the item currently being typed, and drives the suggestions.
+function onItemsInput(val){
+  const parts = val.split(',');
+  const current = parts[parts.length - 1].trim();
+  confirmedItems = parts.slice(0, -1).map(s => s.trim()).filter(Boolean);
+
+  const chipsBox = document.getElementById('chipsBox');
+  chipsBox.innerHTML = '';
+  confirmedItems.forEach(name => {
+    const tag = document.createElement('div');
+    tag.className = 'chip confirmed';
+    tag.textContent = name;
+    chipsBox.appendChild(tag);
+  });
+
+  const suggestBox = document.getElementById('suggestBox');
+  suggestBox.innerHTML = '';
+  if (current) {
+    const matches = catalog.filter(i => i.name.toLowerCase().startsWith(current.toLowerCase())).slice(0, 4);
+    matches.forEach(m => {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.textContent = m.name;
+      chip.onclick = () => {
+        const updated = [...confirmedItems, m.name];
+        const input = document.getElementById('itemsInput');
+        input.value = updated.join(', ') + ', ';
+        onItemsInput(input.value);
+        input.focus();
+      };
+      suggestBox.appendChild(chip);
+    });
+  }
+}
+
+function updateGrandTotalSimple(){
+  const val = parseFloat(document.getElementById('totalPriceInput').value) || 0;
+  document.getElementById('grandTotal').textContent = val;
+}
+
+function saveBill(){
+  // capture any last item typed that wasn't followed by a comma
+  const input = document.getElementById('itemsInput');
+  const leftover = input.value.split(',').pop().trim();
+  const finalItems = leftover ? [...confirmedItems, leftover] : confirmedItems;
+  // finalItems + total price is what gets sent to the database:
+  // each item name is stored as its own row (for "best seller" reports),
+  // all sharing the same bill total (no per-item price split).
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>{ toast.classList.remove('show'); showLanding(); }, 900);
+}
+</script>
+
+</body>
+</html>

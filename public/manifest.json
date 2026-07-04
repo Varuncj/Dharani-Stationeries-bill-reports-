@@ -1,0 +1,21 @@
+{
+  "name": "Dharani Stationeries",
+  "short_name": "Stationeries",
+  "description": "A React PWA for keeping stationeries bills with Supabase storage.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#2455E6",
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
